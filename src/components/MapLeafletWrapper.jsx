@@ -14,18 +14,43 @@ function LeafletMap({ showShops, showRiders, segmentedRoute }) {
 
     if (!MapComponent) {
         return (
-            <div style={{
-                flex: 1, display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
-                background: '#f5f0e8', color: '#aaa',
-                fontFamily: "'Space Mono', monospace", fontSize: 13,
-            }}>
+            <div className="h-125 flex items-center justify-center bg-[#f5f0e8] text-gray-400 font-mono text-sm">
                 Loading map…
             </div>
         );
     }
 
-    return <MapComponent showShops={showShops} showRiders={showRiders} segmentedRoute={segmentedRoute} />;
+    return (
+        <MapComponent
+            showShops={showShops}
+            showRiders={showRiders}
+            segmentedRoute={segmentedRoute}
+        />
+    );
+}
+
+function Chip({ active, onClick, children }) {
+    return (
+        <div
+            onClick={onClick}
+            className={[
+                'flex items-center gap-2 px-3.5 py-1.5 rounded-lg cursor-pointer select-none text-[13px] font-semibold transition-all border',
+                active
+                    ? 'bg-[#ffd23f]/15 border-[#ffd23f]/40 text-[#ffd23f]'
+                    : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90',
+            ].join(' ')}
+        >
+            <span
+                className={[
+                    'w-4 h-4 rounded flex items-center justify-center text-[10px] border transition-all',
+                    active ? 'bg-[#ffd23f] border-[#ffd23f] text-[#1a1a2e]' : 'border-current',
+                ].join(' ')}
+            >
+                {active ? '✓' : ''}
+            </span>
+            {children}
+        </div>
+    );
 }
 
 export default function MapLeafletWrapper() {
@@ -34,111 +59,46 @@ export default function MapLeafletWrapper() {
     const [segmentedRoute, setSegmentedRoute] = useState(false);
 
     return (
-        <>
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
-                .leaflet-wrapper {
-                    font-family: 'Plus Jakarta Sans', sans-serif;
-                    height: 100vh; display: flex; flex-direction: column;
-                    background: #f5f0e8; color: #1a1a2e;
-                }
-                .leaflet-header {
-                    background: #1a1a2e; padding: 0 32px;
-                    display: flex; align-items: center; gap: 32px;
-                    height: 64px; flex-shrink: 0;
-                    position: relative; overflow: hidden;
-                }
-                .leaflet-header::after {
-                    content: ''; position: absolute;
-                    bottom: 0; left: 0; right: 0; height: 2px;
-                    background: linear-gradient(90deg, #ff6b35, #ffd23f, #ff6b35);
-                    background-size: 200% 100%;
-                    animation: lf-shimmer 3s infinite;
-                }
-                @keyframes lf-shimmer {
-                    0% { background-position: 200% 0; }
-                    100% { background-position: -200% 0; }
-                }
-                .leaflet-logo {
-                    font-size: 18px; font-weight: 800; color: #fff;
-                    letter-spacing: -0.03em; white-space: nowrap;
-                    display: flex; align-items: center; gap: 8px;
-                }
-                .leaflet-logo-accent { color: #ffd23f; }
-                .leaflet-logo-tag {
-                    font-family: 'Space Mono', monospace; font-size: 9px;
-                    color: rgba(255,255,255,0.4); font-weight: 400;
-                    letter-spacing: 0.1em; text-transform: uppercase;
-                    padding: 2px 8px; border: 1px solid rgba(255,255,255,0.1);
-                    border-radius: 4px; margin-left: 4px;
-                }
-                .leaflet-divider {
-                    width: 1px; height: 24px;
-                    background: rgba(255,255,255,0.1); flex-shrink: 0;
-                }
-                .leaflet-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-                .ctrl-chip {
-                    display: flex; align-items: center; gap: 8px;
-                    padding: 6px 14px; border-radius: 8px; cursor: pointer;
-                    font-size: 13px; font-weight: 600;
-                    transition: all 0.2s;
-                    border: 1.5px solid rgba(255,255,255,0.1);
-                    background: rgba(255,255,255,0.05);
-                    color: rgba(255,255,255,0.6); user-select: none;
-                }
-                .ctrl-chip:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
-                .ctrl-chip.active {
-                    background: rgba(255,210,63,0.15);
-                    border-color: rgba(255,210,63,0.4); color: #ffd23f;
-                }
-                .ctrl-check {
-                    width: 16px; height: 16px; border-radius: 4px;
-                    border: 1.5px solid currentColor;
-                    display: flex; align-items: center; justify-content: center;
-                    font-size: 10px; transition: all 0.2s;
-                }
-                .ctrl-chip.active .ctrl-check {
-                    background: #ffd23f; border-color: #ffd23f; color: #1a1a2e;
-                }
-                .leaflet-loc-info {
-                    margin-left: auto;
-                    font-family: 'Space Mono', monospace; font-size: 10px;
-                    color: rgba(255,255,255,0.3); letter-spacing: 0.03em; white-space: nowrap;
-                }
-                .leaflet-map-container {
-                    flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column;
-                }
-            `}</style>
+        <div className="w-full flex flex-col bg-[#f5f0e8] text-[#1a1a2e] font-sans">
 
-            <div className="leaflet-wrapper">
-                <header className="leaflet-header">
-                    <div className="leaflet-logo">
-                        <span className="leaflet-logo-tag">Leaflet + OSM</span>
-                    </div>
-                    <div className="leaflet-divider" />
-                    <div className="leaflet-controls">
-                        <div className={`ctrl-chip ${showShops ? 'active' : ''}`} onClick={() => setShowShops(v => !v)}>
-                            <div className="ctrl-check">{showShops ? '✓' : ''}</div>
-                            🛒 Shops
-                        </div>
-                        <div className={`ctrl-chip ${showRiders ? 'active' : ''}`} onClick={() => setShowRiders(v => !v)}>
-                            <div className="ctrl-check">{showRiders ? '✓' : ''}</div>
-                            🏍️ Riders
-                        </div>
-                        <div className={`ctrl-chip ${segmentedRoute ? 'active' : ''}`} onClick={() => setSegmentedRoute(v => !v)}>
-                            <div className="ctrl-check">{segmentedRoute ? '✓' : ''}</div>
-                            ⛓ Segmented A→B→C
-                        </div>
-                    </div>
-                    <div className="leaflet-loc-info">
-                        📍 {mockData.user.lat}°N · {mockData.user.lng}°E · Chattogram
-                    </div>
-                </header>
+            {/* Header */}
+            <header className="relative flex items-center gap-8 h-16 px-8 bg-[#1a1a2e] shrink-0 overflow-hidden">
+                <div
+                    className="absolute bottom-0 left-0 right-0 h-0.5"
+                    style={{
+                        background: 'linear-gradient(90deg,#ff6b35,#ffd23f,#ff6b35)',
+                        backgroundSize: '200% 100%',
+                        animation: 'shimmer 3s linear infinite',
+                    }}
+                />
+                <style>{`@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}`}</style>
 
-                <div className="leaflet-map-container">
-                    <LeafletMap showShops={showShops} showRiders={showRiders} segmentedRoute={segmentedRoute} />
+                {/* Badge */}
+                <span className="font-mono text-[9px] text-white/40 uppercase tracking-widest border border-white/10 rounded px-2 py-0.5 shrink-0">
+                    Leaflet + OSM
+                </span>
+
+                <div className="w-px h-6 bg-white/10 shrink-0" />
+
+                {/* Controls */}
+                <div className="flex items-center gap-2 flex-wrap">
+                    <Chip active={showShops} onClick={() => setShowShops(v => !v)}>🛒 Shops</Chip>
+                    <Chip active={showRiders} onClick={() => setShowRiders(v => !v)}>🏍️ Riders</Chip>
+                    <Chip active={segmentedRoute} onClick={() => setSegmentedRoute(v => !v)}>⛓ Segmented A→B→C</Chip>
                 </div>
-            </div>
-        </>
+
+                {/* Coords */}
+                <span className="ml-auto font-mono text-[10px] text-white/30 tracking-wide whitespace-nowrap">
+                    📍 {mockData.user.lat}°N · {mockData.user.lng}°E · Chattogram
+                </span>
+            </header>
+
+            {/* Map */}
+            <LeafletMap
+                showShops={showShops}
+                showRiders={showRiders}
+                segmentedRoute={segmentedRoute}
+            />
+        </div>
     );
 }

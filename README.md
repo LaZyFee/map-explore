@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🗺️ Map Module (Next.js)
 
-## Getting Started
+A flexible and scalable map system supporting routing, multiple stops, and nearby search features using various map providers.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 📍 Multiple Locations
+- Display multiple markers on the map
+- Support dynamic location data (user, shops, riders, etc.)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🧭 From → To Routing
+- Draw route between two points (A → C)
+- Supports real-time updates on location change
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🛑 Multiple Stopages (Waypoints)
+- Handle intermediate stops between routes  
+- Example:
+  - Route: A → C  
+  - Stop: B  
+  - Output:
+    - A → B  
+    - B → C  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🔍 Search & Nearby Results
 
-## Deploy on Vercel
+#### 🏪 Nearby Shops
+- On search, display multiple nearby shops
+- Cluster or list view supported
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### 🛵 Nearby Riders
+- Show available riders near searched location
+- Useful for delivery/logistics apps
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧩 Map Providers (Pluggable)
+
+
+## ⚙️ Architecture Overview
+
+```txt
+Map
+├── Markers (Multiple Locations)
+├── Routing
+│   ├── From-To
+│   └── Waypoints (Stops)
+├── Search
+│   ├── Nearby Shops
+│   └── Nearby Riders
+└── Map Provider
+
+
+    |-OpenMapTiles
+    |-OpenStreetMap
+    |-Leaflet
+    |-Mapilary
+    |-Maplibre
+    |-Maptiler
+    |-LocationIQ
+    |-MapCN
+    |-Google Map
