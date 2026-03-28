@@ -51,12 +51,6 @@ export default function MapMaptilerWrapper() {
         setSearchQuery(searchInput);
     };
 
-    const stats = [
-        { label: "Shops", value: mockData.shops.length, color: "#e74c3c", icon: "🛒" },
-        { label: "Riders", value: mockData.riders.filter(r => r.status === 'available').length, color: "#2ecc71", icon: "🏍️" },
-        { label: "Active", value: mockData.riders.length, color: "#f39c12", icon: "📍" },
-    ];
-
     return (
         <>
             <div className="maptiler-wrapper">
